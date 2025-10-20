@@ -1,4 +1,5 @@
-let hits=0, misses=0, spawnInterval, gameTime=30, timerInterval;
+let hits=0, misses=0, shotsImg=0, missesImg=0;
+let spawnInterval, gameTime=30, timerInterval;
 let currentTargetImg='https://i.ibb.co/FqJs0Pb4/target.png'; 
 const missImgSrc="https://i.ibb.co/kVC37by2/miss.png";
 
@@ -11,8 +12,9 @@ const targetSizeValue=document.getElementById('targetSizeValue');
 const spawnRateValue=document.getElementById('spawnRateValue');
 const scoreDisplay=document.getElementById('scoreDisplay');
 const timerDisplay=document.getElementById('timer');
+const imageCountDisplay=document.getElementById('imageCount');
 
-// Update sliders
+// Slider updates
 targetSizeInput.addEventListener('input',()=>targetSizeValue.textContent=targetSizeInput.value);
 spawnRateInput.addEventListener('input',()=>spawnRateValue.textContent=spawnRateInput.value);
 
@@ -26,7 +28,7 @@ uploadInput.addEventListener('change',(e)=>{
   }
 });
 
-// Sandal cursor movement
+// Make sandal cursor exactly follow mouse
 gameArea.addEventListener('mousemove',(e)=>{
   const rect=gameArea.getBoundingClientRect();
   let x=e.clientX-rect.left;
@@ -37,12 +39,11 @@ gameArea.addEventListener('mousemove',(e)=>{
   sandalCursor.style.top=`${y}px`;
 });
 
-// Sandal shooting animation
+// Sandal shooting animation & hit/miss detection
 gameArea.addEventListener('click',(e)=>{
   sandalCursor.classList.add('shoot');
   setTimeout(()=>sandalCursor.classList.remove('shoot'),150);
 
-  // Check if click hits target
   const target=document.querySelector('.target');
   const rect=target?.getBoundingClientRect();
   const gameRect=gameArea.getBoundingClientRect();
@@ -50,26 +51,25 @@ gameArea.addEventListener('click',(e)=>{
   const clickY=e.clientY;
 
   if(target && clickX>=rect.left && clickX<=rect.right && clickY>=rect.top && clickY<=rect.bottom){
-    // Hit
     hits++;
+    shotsImg++;
     showShot(target);
-  }else{
-    // Miss
+  } else {
     misses++;
+    missesImg++;
     showMiss(e.clientX,e.clientY);
   }
   updateScore();
 });
 
-// Spawn a single target (only one at a time)
+// Spawn a single target
 function spawnTarget(){
-  // Remove existing target
   document.querySelectorAll('.target').forEach(t=>t.remove());
 
   const target=document.createElement('img');
   target.src=currentTargetImg;
   target.classList.add('target');
-  const size=((targetSizeInput.value/100)*gameArea.clientWidth) * 1.5; // 1.5x bigger
+  const size=((targetSizeInput.value/100)*gameArea.clientWidth) * 1.5;
   target.style.width=`${size}px`;
   target.style.height=`${size}px`;
 
@@ -80,7 +80,6 @@ function spawnTarget(){
 
   gameArea.appendChild(target);
 
-  // Remove target after spawnRate
   setTimeout(()=>{
     if(gameArea.contains(target)){
       target.remove();
@@ -88,7 +87,7 @@ function spawnTarget(){
   }, spawnRateInput.value-50);
 }
 
-// Show shot image (target image) briefly
+// Show shot image
 function showShot(target){
   const shot=document.createElement('img');
   shot.src=currentTargetImg;
@@ -103,7 +102,7 @@ function showShot(target){
   setTimeout(()=>shot.remove(),300);
 }
 
-// Show miss image briefly at click position
+// Show miss image
 function showMiss(x,y){
   const miss=document.createElement('img');
   miss.src=missImgSrc;
@@ -118,14 +117,15 @@ function showMiss(x,y){
   setTimeout(()=>miss.remove(),300);
 }
 
-// Update score
+// Update score & images
 function updateScore(){
   scoreDisplay.textContent=`Hits: ${hits} | Misses: ${misses}`;
+  imageCountDisplay.textContent=`Shots: ${shotsImg} | Misses: ${missesImg}`;
 }
 
 // Start game
 function startGame(){
-  hits=0; misses=0;
+  hits=0; misses=0; shotsImg=0; missesImg=0;
   updateScore();
   clearInterval(spawnInterval);
   clearInterval(timerInterval);
@@ -135,14 +135,13 @@ function startGame(){
   spawnTarget();
   spawnInterval=setInterval(spawnTarget, spawnRateInput.value);
 
-  // Timer countdown
   timerInterval=setInterval(()=>{
     gameTime--;
     timerDisplay.textContent=`Time: ${gameTime}s`;
     if(gameTime<=0){
       clearInterval(spawnInterval);
       clearInterval(timerInterval);
-      alert(`Game Over! Hits: ${hits}, Misses: ${misses}`);
+      alert(`Game Over!\nHits: ${hits}, Misses: ${misses}`);
     }
   },1000);
 }
@@ -150,7 +149,7 @@ function startGame(){
 // Download CSV
 document.getElementById('startBtn').addEventListener('click', startGame);
 document.getElementById('downloadBtn').addEventListener('click',()=>{
-  const csv=`Hits,Misses\n${hits},${misses}`;
+  const csv=`Hits,Misses,ShotImages,MissImages\n${hits},${misses},${shotsImg},${missesImg}`;
   const blob=new Blob([csv],{type:'text/csv'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
