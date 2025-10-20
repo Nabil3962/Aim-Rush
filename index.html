@@ -1,46 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aim-Rush 🎯</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aim-Rush 🎯 The Perfected Arcade</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Press Start 2P Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Tone.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>🎯 Aim-Rush</h1>
+    <div id="appContainer" class="p-4">
+        <!-- Game Title -->
+        <h1>🎯 Aim-Rush</h1>
 
-<div id="controls">
-  <div class="control-row">
-    <label id="uploadLabel" for="targetUpload">Upload Target Image</label>
-    <input type="file" id="targetUpload" accept="image/*" style="display:none;" />
-  </div>
+        <!-- Upload Target -->
+        <div id="uploadControl" class="control-box !py-5">
+            <h3 class="text-base text-primary-color mb-3" style="text-shadow: 0 0 5px black;">— CUSTOM TARGET —</h3>
+            <label id="uploadLabel" for="targetUpload" class="text-sm md:text-base max-w-xs block">Upload Target Image</label>
+            <input type="file" id="targetUpload" accept="image/*" style="display:none;" />
+        </div>
 
-  <div class="control-row">
-    <label>Target Size:</label>
-    <input type="range" id="targetSize" min="20" max="60" value="25">
-    <span id="targetSizeValue">25</span>
-  </div>
+        <!-- Settings -->
+        <div id="settings" class="control-box space-y-3">
+            <h3 class="text-base text-secondary-color" style="text-shadow: 0 0 5px black;">— GAMEPLAY SETTINGS —</h3>
+            <div class="control-row">
+                <label>Target Size:</label>
+                <input type="range" id="targetSize" min="20" max="60" value="25">
+                <span id="targetSizeValue" class="w-8 text-right">25</span>
+            </div>
+            <div class="control-row">
+                <label>Spawn Speed (ms):</label>
+                <input type="range" id="spawnRate" min="300" max="2500" value="1000">
+                <span id="spawnRateValue" class="w-12 text-right">1000</span>
+            </div>
+        </div>
 
-  <div class="control-row">
-    <label>Spawn Speed (ms):</label>
-    <input type="range" id="spawnRate" min="300" max="2500" value="1000">
-    <span id="spawnRateValue">1000</span>
-  </div>
+        <!-- Action Buttons -->
+        <div id="actionButtons" class="control-box !py-3">
+            <div class="control-row justify-center gap-4 !m-0">
+                <button id="startBtn" class="text-sm md:text-base">Start Game</button>
+                <button id="downloadBtn" class="text-sm md:text-base">Download Score CSV</button>
+            </div>
+        </div>
 
-  <div class="control-row">
-    <button id="startBtn">Start Game</button>
-    <button id="downloadBtn">Download Score CSV</button>
-  </div>
-</div>
+        <!-- Game Area -->
+        <div id="gameArea"></div>
 
-<div id="gameArea"></div>
+        <!-- Stats -->
+        <div id="stats" class="flex flex-wrap justify-center gap-4 my-2 text-base md:text-xl font-bold">
+            <div id="timer" class="bg-gray-800 p-2 rounded-lg shadow-lg border border-primary-color">Time: 30s</div>
+            <div id="scoreDisplay" class="bg-gray-800 p-2 rounded-lg shadow-lg border border-primary-color">Total Clicks: 0 | Misses: 0</div>
+        </div>
+        <div id="imageCount" class="text-sm md:text-lg mb-4">Target Hits: 0 | Game Misses: 0</div>
 
-<div id="timer">Time: 30s</div>
-<div id="scoreDisplay">Hits: 0 | Misses: 0</div>
-<div id="imageCount">Shots: 0 | Misses: 0</div>
+        <!-- Custom Cursors -->
+        <img id="fireCursor" src="https://placehold.co/100x100/ff7700/000000?text=%E2%9D%A4" alt="Fire trail">
+        <img id="sandalCursor" src="https://i.ibb.co.com/p6DM3QTX/sandal.jpg" alt="Sandal Cursor">
+    </div>
 
-<img id="sandalCursor" src="https://i.ibb.co/p6DM3QTX/sandal.jpg" alt="Sandal Cursor">
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="modal-overlay hidden">
+        <div class="modal-content text-center">
+            <h2 class="text-3xl font-bold text-secondary-color mb-4">GAME OVER!</h2>
+            <p id="modalResults" class="text-xl mb-6">Results loading...</p>
+            <button id="closeModalBtn">Play Again</button>
+        </div>
+    </div>
 
-<script src="script.js"></script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
 </body>
 </html>
