@@ -11,8 +11,6 @@ const targetSizeValue=document.getElementById('targetSizeValue');
 const spawnRateValue=document.getElementById('spawnRateValue');
 const hitIconsDiv=document.getElementById('hitIcons');
 const missIconsDiv=document.getElementById('missIcons');
-const hitsDisplay=document.getElementById('hits');
-const missesDisplay=document.getElementById('misses');
 
 // Update sliders
 targetSizeInput.addEventListener('input',()=>targetSizeValue.textContent=targetSizeInput.value);
@@ -25,7 +23,6 @@ uploadInput.addEventListener('change',(e)=>{
     const reader=new FileReader();
     reader.onload=(ev)=>{
       currentTargetImg=ev.target.result;
-      // Replace existing targets
       document.querySelectorAll('.target').forEach(t=>t.src=currentTargetImg);
       alert("Target image uploaded! Ready to start.");
     };
@@ -66,9 +63,7 @@ function spawnTarget(){
   target.addEventListener('click',(e)=>{
     e.stopPropagation();
     hits++;
-    hitsDisplay.textContent=hits;
-    const hitImg=document.createElement('img');
-    hitImg.src=currentTargetImg;
+    const hitImg=document.createElement('img'); hitImg.src=currentTargetImg;
     hitIconsDiv.appendChild(hitImg);
     target.remove();
   });
@@ -79,9 +74,7 @@ function spawnTarget(){
     if(gameArea.contains(target)){
       target.remove();
       misses++;
-      missesDisplay.textContent=misses;
-      const missImg=document.createElement('img');
-      missImg.src=missImgSrc;
+      const missImg=document.createElement('img'); missImg.src=missImgSrc;
       missIconsDiv.appendChild(missImg);
     }
   }, spawnRateInput.value-50);
@@ -90,11 +83,8 @@ function spawnTarget(){
 // Start game
 function startGame(){
   hits=0; misses=0;
-  hitsDisplay.textContent=hits;
-  missesDisplay.textContent=misses;
   hitIconsDiv.innerHTML=''; missIconsDiv.innerHTML='';
   clearInterval(spawnInterval);
-
   spawnTarget(); // spawn first immediately
   spawnInterval=setInterval(spawnTarget, spawnRateInput.value);
 }
@@ -112,7 +102,7 @@ document.getElementById('downloadBtn').addEventListener('click',()=>{
   URL.revokeObjectURL(url);
 });
 
-// Spawn default target immediately on page load
+// Spawn default target immediately
 window.onload = () => {
   const target=document.createElement('img');
   target.src=currentTargetImg;
