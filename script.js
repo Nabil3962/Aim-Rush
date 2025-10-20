@@ -19,17 +19,25 @@ const spawnRateValue = document.getElementById('spawnRateValue');
 const hitIconsDiv = document.getElementById('hitIcons');
 const missIconsDiv = document.getElementById('missIcons');
 
+// Update sliders text
+targetSizeInput.addEventListener('input', ()=>{ targetSizeValue.textContent = targetSizeInput.value; });
+spawnRateInput.addEventListener('input', ()=>{ spawnRateValue.textContent = spawnRateInput.value; });
+
+// Upload target image
 uploadInput.addEventListener('change', (e)=>{
   const file = e.target.files[0];
   if(file){
     const reader = new FileReader();
-    reader.onload = (event)=>{ targetImgSrc = event.target.result; };
+    reader.onload = (event)=>{
+      targetImgSrc = event.target.result;
+
+      // Remove existing targets and spawn new one
+      document.querySelectorAll('.target').forEach(t => t.remove());
+      spawnTarget();
+    };
     reader.readAsDataURL(file);
   }
 });
-
-targetSizeInput.addEventListener('input', ()=>{ targetSizeValue.textContent = targetSizeInput.value; });
-spawnRateInput.addEventListener('input', ()=>{ spawnRateValue.textContent = spawnRateInput.value; });
 
 // Move sandal cursor inside gameArea only
 gameArea.addEventListener('mousemove', (e)=>{
@@ -58,8 +66,12 @@ function startGame(){
   hitIconsDiv.innerHTML = '';
   missIconsDiv.innerHTML = '';
   clearInterval(spawnInterval);
+
   gameArea.innerHTML = '';
   gameArea.appendChild(sandalCursor);
+
+  // Ensure default target if no uploaded image
+  if(!targetImgSrc) targetImgSrc = defaultTarget;
 
   spawnTarget();
   spawnInterval = setInterval(spawnTarget, spawnRateInput.value);
