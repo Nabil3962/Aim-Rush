@@ -31,16 +31,21 @@ function startGame() {
   hitsDisplay.textContent = hits;
   missesDisplay.textContent = misses;
   timeDisplay.textContent = timeLeft;
+  document.getElementById('hitIcons').innerHTML = '';
+  document.getElementById('missIcons').innerHTML = '';
 
   clearInterval(spawnInterval);
   clearInterval(gameTimer);
   gameArea.innerHTML = '';
 
+  spawnTarget();
   spawnInterval = setInterval(spawnTarget, spawnRateInput.value);
   gameTimer = setInterval(updateTimer, 1000);
 }
 
 function spawnTarget() {
+  gameArea.innerHTML = ''; // Only one target at a time (like Duck Hunt)
+
   const target = document.createElement('img');
   target.src = targetImgSrc || 'https://i.ibb.co/F61PmY3/target.png';
   target.classList.add('target');
@@ -54,13 +59,19 @@ function spawnTarget() {
   target.style.left = `${x}px`;
   target.style.top = `${y}px`;
 
+  if(targetImgSrc) target.classList.add('custom');
+
   target.addEventListener('click', (e) => {
     e.stopPropagation();
     hits++;
     hitsDisplay.textContent = hits;
+
+    const hitIcon = document.createElement('img');
+    hitIcon.src = targetImgSrc || 'https://i.ibb.co/F61PmY3/target.png';
+    document.getElementById('hitIcons').appendChild(hitIcon);
+
     playHitSound();
 
-    // Hit flash effect
     const flash = document.createElement('div');
     flash.id = 'gunFlash';
     document.body.appendChild(flash);
@@ -71,12 +82,21 @@ function spawnTarget() {
   });
 
   gameArea.appendChild(target);
-  setTimeout(() => target.remove(), 1500);
+
+  setTimeout(() => {
+    if (gameArea.contains(target)) {
+      target.remove();
+      misses++;
+      missesDisplay.textContent = misses;
+      const missIcon = document.createElement('img');
+      missIcon.src = 'https://i.ibb.co/yp4qvM7/miss.png';
+      document.getElementById('missIcons').appendChild(missIcon);
+    }
+  }, spawnRateInput.value - 50); // disappear if not hit
 }
 
 gameArea.addEventListener('click', () => {
-  misses++;
-  missesDisplay.textContent = misses;
+  // Miss handled in spawn timeout
 });
 
 function updateTimer() {
