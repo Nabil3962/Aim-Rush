@@ -114,3 +114,4 @@ window.onload = () => {
   target.style.top=`${(gameArea.clientHeight-size)/2}px`;
   gameArea.appendChild(target);
 };
+
