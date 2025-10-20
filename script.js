@@ -1,6 +1,7 @@
 let hits = 0;
 let misses = 0;
-let targetImgSrc = '';
+let targetImgSrc = ''; // uploaded image
+let activeTargetImg = ''; // image used for current game
 let spawnInterval;
 
 const defaultTarget = "https://i.ibb.co/FqJs0Pb4/target.png";
@@ -30,10 +31,7 @@ uploadInput.addEventListener('change', (e)=>{
     const reader = new FileReader();
     reader.onload = (event)=>{
       targetImgSrc = event.target.result;
-
-      // Remove existing targets and spawn new one
-      document.querySelectorAll('.target').forEach(t => t.remove());
-      spawnTarget();
+      alert("Target image uploaded successfully! Now click Start Game.");
     };
     reader.readAsDataURL(file);
   }
@@ -70,16 +68,19 @@ function startGame(){
   gameArea.innerHTML = '';
   gameArea.appendChild(sandalCursor);
 
-  // Ensure default target if no uploaded image
-  if(!targetImgSrc) targetImgSrc = defaultTarget;
+  // Set the target image for this game session
+  activeTargetImg = targetImgSrc || defaultTarget;
 
+  // Spawn first target immediately
   spawnTarget();
+
+  // Spawn targets at interval
   spawnInterval = setInterval(spawnTarget, spawnRateInput.value);
 }
 
 function spawnTarget(){
   const target = document.createElement('img');
-  target.src = targetImgSrc || defaultTarget;
+  target.src = activeTargetImg;
   target.classList.add('target');
 
   const size = (targetSizeInput.value / 100) * gameArea.clientWidth;
@@ -97,7 +98,7 @@ function spawnTarget(){
     hitsDisplay.textContent = hits;
 
     const hitImg = document.createElement('img');
-    hitImg.src = targetImgSrc || defaultTarget;
+    hitImg.src = activeTargetImg;
     hitIconsDiv.appendChild(hitImg);
 
     target.remove();
