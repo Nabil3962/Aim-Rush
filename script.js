@@ -44,10 +44,10 @@ function startGame() {
 }
 
 function spawnTarget() {
-  gameArea.innerHTML = ''; // Only one target at a time (like Duck Hunt)
+  gameArea.innerHTML = ''; // Only one target at a time
 
   const target = document.createElement('img');
-  target.src = targetImgSrc || 'https://i.ibb.co/F61PmY3/target.png';
+  target.src = targetImgSrc || 'images/target.png';
   target.classList.add('target');
 
   const size = targetSizeInput.value;
@@ -67,7 +67,7 @@ function spawnTarget() {
     hitsDisplay.textContent = hits;
 
     const hitIcon = document.createElement('img');
-    hitIcon.src = targetImgSrc || 'https://i.ibb.co/F61PmY3/target.png';
+    hitIcon.src = targetImgSrc || 'images/target.png';
     document.getElementById('hitIcons').appendChild(hitIcon);
 
     playHitSound();
@@ -89,14 +89,14 @@ function spawnTarget() {
       misses++;
       missesDisplay.textContent = misses;
       const missIcon = document.createElement('img');
-      missIcon.src = 'https://i.ibb.co/yp4qvM7/miss.png';
+      missIcon.src = 'images/miss.png';
       document.getElementById('missIcons').appendChild(missIcon);
     }
-  }, spawnRateInput.value - 50); // disappear if not hit
+  }, spawnRateInput.value - 50);
 }
 
 gameArea.addEventListener('click', () => {
-  // Miss handled in spawn timeout
+  // Misses handled in spawn timeout
 });
 
 function updateTimer() {
@@ -122,8 +122,10 @@ document.getElementById('startBtn').addEventListener('click', startGame);
 document.getElementById('downloadBtn').addEventListener('click', () => {
   const csv = `Hits,Misses\n${hits},${misses}`;
   const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'score.csv';
+  a.href = url;
+  a.download = 'AimRush_Score.csv';
   a.click();
+  URL.revokeObjectURL(url);
 });
