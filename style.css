@@ -5,7 +5,7 @@ body, html {
   padding:0;
   height:100%;
   font-family:'Press Start 2P',cursive;
-  background:radial-gradient(circle at center,#1B0F3D,#000);
+  background-color:#0A1F44; /* dark blue page background */
   color:#fff;
   text-align:center;
   cursor:default;
@@ -64,46 +64,41 @@ button:hover{transform:scale(1.05);}
 #gameArea{
   position:relative;
   width:90vw;
-  height:70vh; /* increased height */
+  height:70vh;
   border:4px solid #00FFFF;
   margin:10px auto;
   overflow:hidden;
   cursor:none;
-  background:linear-gradient(#0B0B1F,#1B0F3D);
+  background-color:#0A1F44; /* dark blue solid background */
   box-shadow:0 0 25px #00FFFF inset;
   border-radius:12px;
 }
 
-/* Target with dark blue background and glow animation */
+/* Target with smaller size and glow animation */
 .target{
   position:absolute;
-  background-color:#0A1F44; /* dark blue */
+  background-color:#0A1F44; /* dark blue matching game box */
   border-radius:8px; 
   transition:transform 0.1s ease, box-shadow 0.1s ease;
   filter: drop-shadow(0 0 6px #00FFFF) drop-shadow(0 0 10px #FF69B4);
   animation: glowPulse 1.5s infinite alternate;
 }
 .target:hover{
-  transform:scale(1.2);
-  filter:drop-shadow(0 0 15px #FF69B4) drop-shadow(0 0 20px #00FFFF);
+  transform:scale(1.1);
+  filter:drop-shadow(0 0 12px #FF69B4) drop-shadow(0 0 18px #00FFFF);
 }
 
 @keyframes glowPulse{
-  0%{
-    box-shadow: 0 0 8px #00BFFF, 0 0 12px #1E90FF;
-  }
-  50%{
-    box-shadow: 0 0 15px #00BFFF, 0 0 25px #1E90FF;
-  }
-  100%{
-    box-shadow: 0 0 8px #00BFFF, 0 0 12px #1E90FF;
-  }
+  0%{ box-shadow: 0 0 6px #00BFFF, 0 0 10px #1E90FF; }
+  50%{ box-shadow: 0 0 12px #00BFFF, 0 0 18px #1E90FF; }
+  100%{ box-shadow: 0 0 6px #00BFFF, 0 0 10px #1E90FF; }
 }
 
+/* Sandal cursor 2x bigger */
 #sandalCursor{
   position:absolute;
-  width:50px;
-  height:50px;
+  width:100px;  /* 2x bigger */
+  height:100px; /* 2x bigger */
   pointer-events:none;
   transform:translate(-50%,-50%);
   transition:transform 0.1s;
@@ -138,5 +133,5 @@ button:hover{transform:scale(1.05);}
 @media(max-width:480px){
   #gameArea{height:55vh;}
   #controls,#scoreCard{font-size:12px;}
-  #sandalCursor{width:35px;height:35px;}
+  #sandalCursor{width:70px;height:70px;} /* scaled for mobile */
 }
