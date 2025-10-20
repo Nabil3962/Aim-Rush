@@ -1,54 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aim-Rush 🎯</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aim-Rush 🎯</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>🎯 Aim-Rush</h1>
+<h1>🎯 Aim-Rush</h1>
 
-  <div id="controls">
-    <div class="control-row">
-      <label id="uploadLabel" for="targetUpload">Upload Target Image</label>
-      <input type="file" id="targetUpload" accept="image/*" style="display:none;" />
-    </div>
-
-    <div class="control-row">
-      <label>Target Size:</label>
-      <input type="range" id="targetSize" min="30" max="300" value="100">
-      <span id="targetSizeValue">100</span>
-    </div>
-
-    <div class="control-row">
-      <label>Spawn Speed (ms):</label>
-      <input type="range" id="spawnRate" min="300" max="2500" value="1000">
-      <span id="spawnRateValue">1000</span>
-    </div>
-
-    <div class="control-row">
-      <button id="startBtn">Start Game</button>
-      <button id="downloadBtn">Download Score CSV</button>
-    </div>
+<div id="controls">
+  <div class="control-row">
+    <label id="uploadLabel" for="targetUpload">Upload Target Image</label>
+    <input type="file" id="targetUpload" accept="image/*" style="display:none;" />
   </div>
 
-  <div id="gameArea"></div>
-
-  <div id="scoreCard">
-    <div id="hitSection">
-      <h3>Hits</h3>
-      <div id="hitIcons"></div>
-    </div>
-    <div id="missSection">
-      <h3>Misses</h3>
-      <div id="missIcons"></div>
-    </div>
+  <div class="control-row">
+    <label>Target Size:</label>
+    <input type="range" id="targetSize" min="30" max="300" value="100">
+    <span id="targetSizeValue">100</span>
   </div>
 
-  <!-- Sandal cursor -->
-  <img id="sandalCursor" src="https://i.ibb.co/p6DM3QTX/sandal.jpg" alt="Sandal Cursor">
+  <div class="control-row">
+    <label>Spawn Speed (ms):</label>
+    <input type="range" id="spawnRate" min="300" max="2500" value="1000">
+    <span id="spawnRateValue">1000</span>
+  </div>
 
-  <script src="script.js"></script>
+  <div class="control-row">
+    <button id="startBtn">Start Game</button>
+    <button id="downloadBtn">Download Score CSV</button>
+  </div>
+</div>
+
+<div id="gameArea"></div>
+
+<div id="scoreCard">
+  <div id="hitSection">
+    <h3>Hits</h3>
+    <div id="hitIcons"></div>
+  </div>
+  <div id="missSection">
+    <h3>Misses</h3>
+    <div id="missIcons"></div>
+  </div>
+</div>
+
+<img id="sandalCursor" src="https://i.ibb.co/p6DM3QTX/sandal.jpg" alt="Sandal Cursor">
+
+<script src="script.js"></script>
 </body>
 </html>
