@@ -1,61 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 body {
   margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: radial-gradient(circle at center, #222, #000);
-  color: white;
+  font-family: 'Press Start 2P', cursive;
+  background: radial-gradient(circle at center, #1B0F3D, #000);
+  color: #fff;
   text-align: center;
   overflow: hidden;
 }
 
 h1 {
   margin-top: 10px;
-  text-shadow: 0 0 10px lime;
+  text-shadow: 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 30px #FFD700;
+  color: #39FF14;
+  font-size: 2em;
 }
 
 #controls {
   margin: 15px auto;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 15px;
   border-radius: 12px;
   width: fit-content;
-  box-shadow: 0 0 10px #0f0;
+  box-shadow: 0 0 15px #39FF14;
+}
+
+#controls input[type="range"] {
+  accent-color: #39FF14;
+}
+
+button {
+  background: linear-gradient(90deg, #39FF14, #FFD700);
+  color: black;
+  border: none;
+  padding: 10px 18px;
+  margin: 5px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 10px #39FF14, 0 0 20px #FFD700;
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px #39FF14, 0 0 25px #FFD700;
 }
 
 #gameArea {
   position: relative;
   width: 100vw;
   height: 70vh;
-  border: 2px solid lime;
+  border: 2px solid #39FF14;
   margin-top: 10px;
   overflow: hidden;
   cursor: crosshair;
+  background: linear-gradient(#0B0B1F, #1B0F3D);
+  box-shadow: 0 0 20px #39FF14 inset;
 }
 
 .target {
   position: absolute;
-  transition: transform 0.1s ease;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  filter: drop-shadow(0 0 6px #39FF14) drop-shadow(0 0 10px #FFD700);
 }
 
 .target:hover {
-  transform: scale(1.2);
+  transform: scale(1.25);
+  filter: drop-shadow(0 0 15px #FFD700) drop-shadow(0 0 20px #39FF14);
 }
 
 #stats {
   margin-top: 15px;
   font-size: 18px;
+  text-shadow: 0 0 6px #39FF14;
 }
 
-button {
-  background: lime;
-  color: black;
-  border: none;
-  padding: 8px 15px;
-  margin: 5px;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
+/* Animated background stars */
+#gameArea::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  box-shadow: 
+    50px 20px white,
+    200px 120px white,
+    350px 90px white,
+    500px 180px white,
+    650px 50px white,
+    800px 150px white,
+    900px 70px white;
+  animation: stars 10s linear infinite;
 }
 
-button:hover {
-  background: #aaff00;
+@keyframes stars {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(700px); }
+}
+
+/* Sandal Sprite */
+#sandalSprite {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  pointer-events: none;
+  animation: sway 1.5s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 8px #FFD700);
+}
+
+@keyframes sway {
+  0% { transform: translateX(-50%) rotate(-5deg); }
+  50% { transform: translateX(-50%) rotate(5deg); }
+  100% { transform: translateX(-50%) rotate(-5deg); }
+}
+
+/* Hit flash */
+#gunFlash {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 40px;
+  background: radial-gradient(circle, #FFD700 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes flash {
+  0% { opacity: 1; transform: translateX(-50%) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) scale(2); }
 }
