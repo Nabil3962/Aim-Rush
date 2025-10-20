@@ -38,20 +38,38 @@ gameArea.addEventListener('mousemove',(e)=>{
 });
 
 // Sandal shooting animation
-gameArea.addEventListener('click',()=>{
+gameArea.addEventListener('click',(e)=>{
   sandalCursor.classList.add('shoot');
   setTimeout(()=>sandalCursor.classList.remove('shoot'),150);
+
+  // Check if click hits target
+  const target=document.querySelector('.target');
+  const rect=target?.getBoundingClientRect();
+  const gameRect=gameArea.getBoundingClientRect();
+  const clickX=e.clientX;
+  const clickY=e.clientY;
+
+  if(target && clickX>=rect.left && clickX<=rect.right && clickY>=rect.top && clickY<=rect.bottom){
+    // Hit
+    hits++;
+    showShot(target);
+  }else{
+    // Miss
+    misses++;
+    showMiss(e.clientX,e.clientY);
+  }
+  updateScore();
 });
 
 // Spawn a single target (only one at a time)
 function spawnTarget(){
-  // Remove existing targets
+  // Remove existing target
   document.querySelectorAll('.target').forEach(t=>t.remove());
 
   const target=document.createElement('img');
   target.src=currentTargetImg;
   target.classList.add('target');
-  const size=(targetSizeInput.value/100)*gameArea.clientWidth / 3.5; // 3.5x smaller
+  const size=((targetSizeInput.value/100)*gameArea.clientWidth) * 1.5; // 1.5x bigger
   target.style.width=`${size}px`;
   target.style.height=`${size}px`;
 
@@ -60,26 +78,47 @@ function spawnTarget(){
   target.style.left=`${x}px`;
   target.style.top=`${y}px`;
 
-  target.addEventListener('click',(e)=>{
-    e.stopPropagation();
-    hits++;
-    updateScore();
-    target.remove();
-  });
-
   gameArea.appendChild(target);
 
   // Remove target after spawnRate
   setTimeout(()=>{
     if(gameArea.contains(target)){
       target.remove();
-      misses++;
-      updateScore();
     }
   }, spawnRateInput.value-50);
 }
 
-// Update score display
+// Show shot image (target image) briefly
+function showShot(target){
+  const shot=document.createElement('img');
+  shot.src=currentTargetImg;
+  shot.style.position='absolute';
+  shot.style.left=target.style.left;
+  shot.style.top=target.style.top;
+  shot.style.width=target.style.width;
+  shot.style.height=target.style.height;
+  shot.style.pointerEvents='none';
+  gameArea.appendChild(shot);
+  target.remove();
+  setTimeout(()=>shot.remove(),300);
+}
+
+// Show miss image briefly at click position
+function showMiss(x,y){
+  const miss=document.createElement('img');
+  miss.src=missImgSrc;
+  miss.style.position='absolute';
+  const rect=gameArea.getBoundingClientRect();
+  miss.style.left=`${x-rect.left-15}px`;
+  miss.style.top=`${y-rect.top-15}px`;
+  miss.style.width='30px';
+  miss.style.height='30px';
+  miss.style.pointerEvents='none';
+  gameArea.appendChild(miss);
+  setTimeout(()=>miss.remove(),300);
+}
+
+// Update score
 function updateScore(){
   scoreDisplay.textContent=`Hits: ${hits} | Misses: ${misses}`;
 }
