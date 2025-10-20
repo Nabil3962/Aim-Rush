@@ -19,3 +19,4 @@ button:hover{transform:scale(1.05);}
 #hitIcons img,#missIcons img{width:25px;margin:1px;animation:pop 0.3s ease-in-out;}
 @keyframes pop{0%{transform:scale(0.5);}100%{transform:scale(1);}}
 @media(max-width:480px){#gameArea{height:50vh;}#controls,#scoreCard{font-size:12px;}#sandalCursor{width:35px;height:35px;}}
+
