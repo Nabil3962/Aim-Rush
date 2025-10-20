@@ -5,7 +5,7 @@ body, html {
   padding:0;
   height:100%;
   font-family:'Press Start 2P',cursive;
-  background-color:#0A1F44; /* dark blue background */
+  background-color:#0A1F44;
   color:#fff;
   text-align:center;
   cursor:default;
@@ -46,7 +46,6 @@ h1 {
   transition:0.2s;
 }
 #uploadLabel:hover{transform:scale(1.05);}
-
 input[type="range"]{flex-grow:1;margin:0 10px;}
 
 button{
@@ -64,14 +63,14 @@ button:hover{transform:scale(1.05);}
 
 #gameArea{
   position:relative;
-  width:80vw;  /* standard width */
+  width:80vw;
   max-width:800px;
-  height:60vh; /* standard height */
+  height:60vh;
   border:4px solid #00FFFF;
   margin:10px auto;
   overflow:hidden;
   cursor:none;
-  background-color:#0A1F44; /* dark blue */
+  background-color:#0A1F44;
   box-shadow:0 0 25px #00FFFF inset;
   border-radius:12px;
 }
@@ -94,8 +93,8 @@ button:hover{transform:scale(1.05);}
 
 #sandalCursor{
   position:absolute;
-  width:100px;  /* 2x bigger */
-  height:100px;
+  width:100px; 
+  height:100px; 
   pointer-events:none;
   transform:translate(-50%,-50%);
   transition:transform 0.1s;
