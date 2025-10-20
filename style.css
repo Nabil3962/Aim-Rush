@@ -64,7 +64,7 @@ button:hover{transform:scale(1.05);}
 #gameArea{
   position:relative;
   width:90vw;
-  height:60vh;
+  height:70vh; /* increased height */
   border:4px solid #00FFFF;
   margin:10px auto;
   overflow:hidden;
@@ -74,14 +74,30 @@ button:hover{transform:scale(1.05);}
   border-radius:12px;
 }
 
+/* Target with dark blue background and glow animation */
 .target{
   position:absolute;
-  transition:transform 0.1s ease,box-shadow 0.1s ease;
-  filter:drop-shadow(0 0 6px #00FFFF) drop-shadow(0 0 10px #FF69B4);
+  background-color:#0A1F44; /* dark blue */
+  border-radius:8px; 
+  transition:transform 0.1s ease, box-shadow 0.1s ease;
+  filter: drop-shadow(0 0 6px #00FFFF) drop-shadow(0 0 10px #FF69B4);
+  animation: glowPulse 1.5s infinite alternate;
 }
 .target:hover{
   transform:scale(1.2);
   filter:drop-shadow(0 0 15px #FF69B4) drop-shadow(0 0 20px #00FFFF);
+}
+
+@keyframes glowPulse{
+  0%{
+    box-shadow: 0 0 8px #00BFFF, 0 0 12px #1E90FF;
+  }
+  50%{
+    box-shadow: 0 0 15px #00BFFF, 0 0 25px #1E90FF;
+  }
+  100%{
+    box-shadow: 0 0 8px #00BFFF, 0 0 12px #1E90FF;
+  }
 }
 
 #sandalCursor{
@@ -120,7 +136,7 @@ button:hover{transform:scale(1.05);}
   100%{transform:scale(1);}
 }
 @media(max-width:480px){
-  #gameArea{height:50vh;}
+  #gameArea{height:55vh;}
   #controls,#scoreCard{font-size:12px;}
   #sandalCursor{width:35px;height:35px;}
 }
