@@ -7,7 +7,7 @@ let gameTimer;
 
 const defaultTarget = "https://i.ibb.co/FqJs0Pb4/target.png";
 const missIconSrc = "https://i.ibb.co/kVC37by2/miss.png";
-const crosshair = document.getElementById('crosshair');
+const firePointer = document.getElementById('firePointer');
 
 const gameArea = document.getElementById('gameArea');
 const hitsDisplay = document.getElementById('hits');
@@ -19,11 +19,11 @@ const uploadInput = document.getElementById('targetUpload');
 const targetSizeValue = document.getElementById('targetSizeValue');
 const spawnRateValue = document.getElementById('spawnRateValue');
 
-uploadInput.addEventListener('change', (e) => {
+uploadInput.addEventListener('change', (e)=>{
   const file = e.target.files[0];
-  if(file) {
+  if(file){
     const reader = new FileReader();
-    reader.onload = (event) => { targetImgSrc = event.target.result; };
+    reader.onload = (event)=>{ targetImgSrc = event.target.result; };
     reader.readAsDataURL(file);
   }
 });
@@ -31,13 +31,14 @@ uploadInput.addEventListener('change', (e) => {
 targetSizeInput.addEventListener('input', ()=>{ targetSizeValue.textContent = targetSizeInput.value; });
 spawnRateInput.addEventListener('input', ()=>{ spawnRateValue.textContent = spawnRateInput.value; });
 
+// Move fire pointer with mouse
 gameArea.addEventListener('mousemove', (e)=>{
   const rect = gameArea.getBoundingClientRect();
-  crosshair.style.left = `${e.clientX - rect.left}px`;
-  crosshair.style.top = `${e.clientY - rect.top}px`;
+  firePointer.style.left = `${e.clientX - rect.left}px`;
+  firePointer.style.top = `${e.clientY - rect.top}px`;
 });
 
-function startGame() {
+function startGame(){
   hits = 0; misses = 0; timeLeft = 30;
   hitsDisplay.textContent = hits;
   missesDisplay.textContent = misses;
@@ -47,14 +48,14 @@ function startGame() {
   clearInterval(spawnInterval);
   clearInterval(gameTimer);
   gameArea.innerHTML = '';
-  gameArea.appendChild(crosshair);
+  gameArea.appendChild(firePointer);
 
   spawnTarget();
   spawnInterval = setInterval(spawnTarget, spawnRateInput.value);
   gameTimer = setInterval(updateTimer, 1000);
 }
 
-function spawnTarget() {
+function spawnTarget(){
   const target = document.createElement('img');
   target.src = targetImgSrc || defaultTarget;
   target.classList.add('target');
@@ -95,19 +96,20 @@ function spawnTarget() {
   }, spawnRateInput.value - 50);
 }
 
-function updateTimer() {
+function updateTimer(){
   timeLeft--;
   timeDisplay.textContent = timeLeft;
   if(timeLeft <= 0) endGame();
 }
 
-function endGame() {
+function endGame(){
   clearInterval(spawnInterval);
   clearInterval(gameTimer);
   alert(`Game Over! 🎯 Hits: ${hits} | Misses: ${misses}`);
 }
 
 document.getElementById('startBtn').addEventListener('click', startGame);
+
 document.getElementById('downloadBtn').addEventListener('click', ()=>{
   const csv = `Hits,Misses\n${hits},${misses}`;
   const blob = new Blob([csv], {type:'text/csv'});
