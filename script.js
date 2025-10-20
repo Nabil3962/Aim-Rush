@@ -59,6 +59,14 @@ function spawnTarget() {
     hits++;
     hitsDisplay.textContent = hits;
     playHitSound();
+
+    // Hit flash effect
+    const flash = document.createElement('div');
+    flash.id = 'gunFlash';
+    document.body.appendChild(flash);
+    flash.style.animation = 'flash 0.3s ease-out';
+    setTimeout(() => flash.remove(), 300);
+
     target.remove();
   });
 
