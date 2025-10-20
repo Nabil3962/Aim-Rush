@@ -5,9 +5,9 @@ let targetImgSrc = '';
 let spawnInterval;
 let gameTimer;
 
-// Your hosted images
 const defaultTarget = "https://i.ibb.co/FqJs0Pb4/target.png";
 const missIconSrc = "https://i.ibb.co/kVC37by2/miss.png";
+const crosshair = document.getElementById('crosshair');
 
 const gameArea = document.getElementById('gameArea');
 const hitsDisplay = document.getElementById('hits');
@@ -16,6 +16,8 @@ const timeDisplay = document.getElementById('time');
 const targetSizeInput = document.getElementById('targetSize');
 const spawnRateInput = document.getElementById('spawnRate');
 const uploadInput = document.getElementById('targetUpload');
+const targetSizeValue = document.getElementById('targetSizeValue');
+const spawnRateValue = document.getElementById('spawnRateValue');
 
 uploadInput.addEventListener('change', (e) => {
   const file = e.target.files[0];
@@ -24,6 +26,15 @@ uploadInput.addEventListener('change', (e) => {
     reader.onload = (event) => { targetImgSrc = event.target.result; };
     reader.readAsDataURL(file);
   }
+});
+
+targetSizeInput.addEventListener('input', ()=>{ targetSizeValue.textContent = targetSizeInput.value; });
+spawnRateInput.addEventListener('input', ()=>{ spawnRateValue.textContent = spawnRateInput.value; });
+
+gameArea.addEventListener('mousemove', (e)=>{
+  const rect = gameArea.getBoundingClientRect();
+  crosshair.style.left = `${e.clientX - rect.left}px`;
+  crosshair.style.top = `${e.clientY - rect.top}px`;
 });
 
 function startGame() {
@@ -36,6 +47,7 @@ function startGame() {
   clearInterval(spawnInterval);
   clearInterval(gameTimer);
   gameArea.innerHTML = '';
+  gameArea.appendChild(crosshair);
 
   spawnTarget();
   spawnInterval = setInterval(spawnTarget, spawnRateInput.value);
@@ -43,8 +55,6 @@ function startGame() {
 }
 
 function spawnTarget() {
-  gameArea.innerHTML = '';
-
   const target = document.createElement('img');
   target.src = targetImgSrc || defaultTarget;
   target.classList.add('target');
@@ -58,7 +68,7 @@ function spawnTarget() {
   target.style.left = `${x}px`;
   target.style.top = `${y}px`;
 
-  target.addEventListener('click', (e) => {
+  target.addEventListener('click', (e)=>{
     e.stopPropagation();
     hits++;
     hitsDisplay.textContent = hits;
@@ -72,11 +82,12 @@ function spawnTarget() {
 
   gameArea.appendChild(target);
 
-  setTimeout(() => {
-    if(gameArea.contains(target)) {
+  setTimeout(()=>{
+    if(gameArea.contains(target)){
       target.remove();
       misses++;
       missesDisplay.textContent = misses;
+
       const missIcon = document.createElement('img');
       missIcon.src = missIconSrc;
       document.getElementById('missIcons').appendChild(missIcon);
@@ -97,8 +108,7 @@ function endGame() {
 }
 
 document.getElementById('startBtn').addEventListener('click', startGame);
-
-document.getElementById('downloadBtn').addEventListener('click', () => {
+document.getElementById('downloadBtn').addEventListener('click', ()=>{
   const csv = `Hits,Misses\n${hits},${misses}`;
   const blob = new Blob([csv], {type:'text/csv'});
   const url = URL.createObjectURL(blob);
