@@ -6,18 +6,20 @@ let spawnInterval;
 let gameTimer;
 
 const defaultTarget = "https://i.ibb.co/FqJs0Pb4/target.png";
-const missIconSrc = "https://i.ibb.co/kVC37by2/miss.png";
-const firePointer = document.getElementById('firePointer');
+const missImgSrc = "https://i.ibb.co/kVC37by2/miss.png";
+const sandalCursor = document.getElementById('sandalCursor');
 
 const gameArea = document.getElementById('gameArea');
 const hitsDisplay = document.getElementById('hits');
 const missesDisplay = document.getElementById('misses');
-const timeDisplay = document.getElementById('time');
 const targetSizeInput = document.getElementById('targetSize');
 const spawnRateInput = document.getElementById('spawnRate');
 const uploadInput = document.getElementById('targetUpload');
 const targetSizeValue = document.getElementById('targetSizeValue');
 const spawnRateValue = document.getElementById('spawnRateValue');
+
+const hitIconsDiv = document.getElementById('hitIcons');
+const missIconsDiv = document.getElementById('missIcons');
 
 uploadInput.addEventListener('change', (e)=>{
   const file = e.target.files[0];
@@ -31,28 +33,32 @@ uploadInput.addEventListener('change', (e)=>{
 targetSizeInput.addEventListener('input', ()=>{ targetSizeValue.textContent = targetSizeInput.value; });
 spawnRateInput.addEventListener('input', ()=>{ spawnRateValue.textContent = spawnRateInput.value; });
 
-// Move fire pointer with mouse
+// Move sandal cursor with mouse
 gameArea.addEventListener('mousemove', (e)=>{
   const rect = gameArea.getBoundingClientRect();
-  firePointer.style.left = `${e.clientX - rect.left}px`;
-  firePointer.style.top = `${e.clientY - rect.top}px`;
+  sandalCursor.style.left = `${e.clientX - rect.left}px`;
+  sandalCursor.style.top = `${e.clientY - rect.top}px`;
+});
+
+// Click to shoot animation
+gameArea.addEventListener('click', ()=>{
+  sandalCursor.classList.add('shoot');
+  setTimeout(()=> sandalCursor.classList.remove('shoot'), 150);
 });
 
 function startGame(){
-  hits = 0; misses = 0; timeLeft = 30;
+  hits = 0; misses = 0;
   hitsDisplay.textContent = hits;
   missesDisplay.textContent = misses;
-  timeDisplay.textContent = timeLeft;
-  document.getElementById('hitIcons').innerHTML = '';
-  document.getElementById('missIcons').innerHTML = '';
+  hitIconsDiv.innerHTML = '';
+  missIconsDiv.innerHTML = '';
   clearInterval(spawnInterval);
   clearInterval(gameTimer);
   gameArea.innerHTML = '';
-  gameArea.appendChild(firePointer);
+  gameArea.appendChild(sandalCursor);
 
   spawnTarget();
   spawnInterval = setInterval(spawnTarget, spawnRateInput.value);
-  gameTimer = setInterval(updateTimer, 1000);
 }
 
 function spawnTarget(){
@@ -74,9 +80,9 @@ function spawnTarget(){
     hits++;
     hitsDisplay.textContent = hits;
 
-    const hitIcon = document.createElement('img');
-    hitIcon.src = targetImgSrc || defaultTarget;
-    document.getElementById('hitIcons').appendChild(hitIcon);
+    const hitImg = document.createElement('img');
+    hitImg.src = targetImgSrc || defaultTarget;
+    hitIconsDiv.appendChild(hitImg);
 
     target.remove();
   });
@@ -89,27 +95,14 @@ function spawnTarget(){
       misses++;
       missesDisplay.textContent = misses;
 
-      const missIcon = document.createElement('img');
-      missIcon.src = missIconSrc;
-      document.getElementById('missIcons').appendChild(missIcon);
+      const missImg = document.createElement('img');
+      missImg.src = missImgSrc;
+      missIconsDiv.appendChild(missImg);
     }
   }, spawnRateInput.value - 50);
 }
 
-function updateTimer(){
-  timeLeft--;
-  timeDisplay.textContent = timeLeft;
-  if(timeLeft <= 0) endGame();
-}
-
-function endGame(){
-  clearInterval(spawnInterval);
-  clearInterval(gameTimer);
-  alert(`Game Over! 🎯 Hits: ${hits} | Misses: ${misses}`);
-}
-
 document.getElementById('startBtn').addEventListener('click', startGame);
-
 document.getElementById('downloadBtn').addEventListener('click', ()=>{
   const csv = `Hits,Misses\n${hits},${misses}`;
   const blob = new Blob([csv], {type:'text/csv'});
