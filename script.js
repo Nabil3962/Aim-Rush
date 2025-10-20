@@ -1,9 +1,7 @@
 let hits = 0;
 let misses = 0;
-let timeLeft = 30;
 let targetImgSrc = '';
 let spawnInterval;
-let gameTimer;
 
 const defaultTarget = "https://i.ibb.co/FqJs0Pb4/target.png";
 const missImgSrc = "https://i.ibb.co/kVC37by2/miss.png";
@@ -33,11 +31,18 @@ uploadInput.addEventListener('change', (e)=>{
 targetSizeInput.addEventListener('input', ()=>{ targetSizeValue.textContent = targetSizeInput.value; });
 spawnRateInput.addEventListener('input', ()=>{ spawnRateValue.textContent = spawnRateInput.value; });
 
-// Move sandal cursor with mouse
+// Move sandal cursor inside gameArea only
 gameArea.addEventListener('mousemove', (e)=>{
   const rect = gameArea.getBoundingClientRect();
-  sandalCursor.style.left = `${e.clientX - rect.left}px`;
-  sandalCursor.style.top = `${e.clientY - rect.top}px`;
+  let x = e.clientX - rect.left;
+  let y = e.clientY - rect.top;
+
+  // keep inside boundaries
+  x = Math.max(0, Math.min(x, rect.width));
+  y = Math.max(0, Math.min(y, rect.height));
+
+  sandalCursor.style.left = `${x}px`;
+  sandalCursor.style.top = `${y}px`;
 });
 
 // Click to shoot animation
@@ -53,7 +58,6 @@ function startGame(){
   hitIconsDiv.innerHTML = '';
   missIconsDiv.innerHTML = '';
   clearInterval(spawnInterval);
-  clearInterval(gameTimer);
   gameArea.innerHTML = '';
   gameArea.appendChild(sandalCursor);
 
