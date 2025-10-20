@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aim-Rush 🎯</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>🎯 Aim-Rush</h1>
 
   <div id="controls">
-    <label>Upload Target Image: <input type="file" id="targetUpload" accept="image/*" /></label>
-    <label>Target Size: <input type="range" id="targetSize" min="50" max="200" value="100" /></label>
-    <label>Spawn Speed (ms): <input type="range" id="spawnRate" min="500" max="3000" value="1000" /></label>
+    <label id="uploadLabel" for="targetUpload">Upload Target Image</label>
+    <input type="file" id="targetUpload" accept="image/*" style="display:none;" />
+    <label>Target Size: <input type="range" id="targetSize" min="50" max="200" value="100"></label>
+    <label>Spawn Speed (ms): <input type="range" id="spawnRate" min="500" max="3000" value="1000"></label>
     <button id="startBtn">Start Game</button>
     <button id="downloadBtn">Download Score CSV</button>
   </div>
@@ -23,6 +24,17 @@
     <p>Hits: <span id="hits">0</span></p>
     <p>Misses: <span id="misses">0</span></p>
     <p>Time Left: <span id="time">30</span>s</p>
+  </div>
+
+  <div id="scoreCard">
+    <div id="hitSection">
+      <h3>Hits</h3>
+      <div id="hitIcons"></div>
+    </div>
+    <div id="missSection">
+      <h3>Misses</h3>
+      <div id="missIcons"></div>
+    </div>
   </div>
 
   <!-- Sandal Sprite -->
