@@ -1,6 +1,6 @@
-let hits=0,misses=0,spawnInterval;
-let globalTargetImg='https://i.ibb.co/FqJs0Pb4/target.png'; // default
-let activeTargetImg='';
+let hits=0, misses=0, spawnInterval;
+let currentTargetImg='https://i.ibb.co/FqJs0Pb4/target.png'; // default target
+const missImgSrc="https://i.ibb.co/kVC37by2/miss.png";
 
 const gameArea=document.getElementById('gameArea');
 const sandalCursor=document.getElementById('sandalCursor');
@@ -14,34 +14,32 @@ const missIconsDiv=document.getElementById('missIcons');
 const hitsDisplay=document.getElementById('hits');
 const missesDisplay=document.getElementById('misses');
 
-const missImgSrc="https://i.ibb.co/kVC37by2/miss.png";
-
-// Update slider values
+// Update sliders
 targetSizeInput.addEventListener('input',()=>targetSizeValue.textContent=targetSizeInput.value);
 spawnRateInput.addEventListener('input',()=>spawnRateValue.textContent=spawnRateInput.value);
 
-// Upload new target
+// Upload target
 uploadInput.addEventListener('change',(e)=>{
   const file=e.target.files[0];
   if(file){
     const reader=new FileReader();
     reader.onload=(ev)=>{
-      globalTargetImg=ev.target.result;
-      // Replace any existing target immediately
-      document.querySelectorAll('.target').forEach(t=>t.src=globalTargetImg);
-      alert("Uploaded! Sandal is ready. Click Start to respawn targets.");
+      currentTargetImg=ev.target.result;
+      // Replace existing targets
+      document.querySelectorAll('.target').forEach(t=>t.src=currentTargetImg);
+      alert("Target image uploaded! Ready to start.");
     };
     reader.readAsDataURL(file);
   }
 });
 
-// Sandal cursor movement
+// Sandal cursor movement inside box
 gameArea.addEventListener('mousemove',(e)=>{
   const rect=gameArea.getBoundingClientRect();
   let x=e.clientX-rect.left;
   let y=e.clientY-rect.top;
-  x=Math.max(0,Math.min(x,rect.width));
-  y=Math.max(0,Math.min(y,rect.height));
+  x=Math.max(0, Math.min(x, rect.width));
+  y=Math.max(0, Math.min(y, rect.height));
   sandalCursor.style.left=`${x}px`;
   sandalCursor.style.top=`${y}px`;
 });
@@ -52,25 +50,10 @@ gameArea.addEventListener('click',()=>{
   setTimeout(()=>sandalCursor.classList.remove('shoot'),150);
 });
 
-// Spawn initial default target immediately
-function spawnInitialTarget(){
-  const target=document.createElement('img');
-  target.src=globalTargetImg;
-  target.classList.add('target');
-  const size=(targetSizeInput.value/100)*gameArea.clientWidth;
-  target.style.width=`${size}px`;
-  target.style.height=`${size}px`;
-  const x=(gameArea.clientWidth-size)/2;
-  const y=(gameArea.clientHeight-size)/2;
-  target.style.left=`${x}px`;
-  target.style.top=`${y}px`;
-  gameArea.appendChild(target);
-}
-
-// Spawn new target
+// Spawn a single target
 function spawnTarget(){
   const target=document.createElement('img');
-  target.src=globalTargetImg;
+  target.src=currentTargetImg;
   target.classList.add('target');
   const size=(targetSizeInput.value/100)*gameArea.clientWidth;
   target.style.width=`${size}px`;
@@ -79,21 +62,29 @@ function spawnTarget(){
   const y=Math.random()*(gameArea.clientHeight-size);
   target.style.left=`${x}px`;
   target.style.top=`${y}px`;
+
   target.addEventListener('click',(e)=>{
     e.stopPropagation();
-    hits++;hitsDisplay.textContent=hits;
-    const hitImg=document.createElement('img'); hitImg.src=globalTargetImg;
+    hits++;
+    hitsDisplay.textContent=hits;
+    const hitImg=document.createElement('img');
+    hitImg.src=currentTargetImg;
     hitIconsDiv.appendChild(hitImg);
     target.remove();
   });
+
   gameArea.appendChild(target);
+
   setTimeout(()=>{
     if(gameArea.contains(target)){
-      target.remove(); misses++; missesDisplay.textContent=misses;
-      const missImg=document.createElement('img'); missImg.src=missImgSrc;
+      target.remove();
+      misses++;
+      missesDisplay.textContent=misses;
+      const missImg=document.createElement('img');
+      missImg.src=missImgSrc;
       missIconsDiv.appendChild(missImg);
     }
-  },spawnRateInput.value-50);
+  }, spawnRateInput.value-50);
 }
 
 // Start game
@@ -103,21 +94,33 @@ function startGame(){
   missesDisplay.textContent=misses;
   hitIconsDiv.innerHTML=''; missIconsDiv.innerHTML='';
   clearInterval(spawnInterval);
-  gameArea.innerHTML='';
-  gameArea.appendChild(sandalCursor);
-  spawnTarget();
-  spawnInterval=setInterval(spawnTarget,spawnRateInput.value);
+
+  spawnTarget(); // spawn first immediately
+  spawnInterval=setInterval(spawnTarget, spawnRateInput.value);
 }
 
 // Download CSV
-document.getElementById('startBtn').addEventListener('click',startGame);
+document.getElementById('startBtn').addEventListener('click', startGame);
 document.getElementById('downloadBtn').addEventListener('click',()=>{
   const csv=`Hits,Misses\n${hits},${misses}`;
   const blob=new Blob([csv],{type:'text/csv'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='AimRush_Score.csv'; a.click();
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='AimRush_Score.csv';
+  a.click();
   URL.revokeObjectURL(url);
 });
 
-// Spawn default target when page loads
-window.onload=spawnInitialTarget;
+// Spawn default target immediately on page load
+window.onload = () => {
+  const target=document.createElement('img');
+  target.src=currentTargetImg;
+  target.classList.add('target');
+  const size=(targetSizeInput.value/100)*gameArea.clientWidth;
+  target.style.width=`${size}px`;
+  target.style.height=`${size}px`;
+  target.style.left=`${(gameArea.clientWidth-size)/2}px`;
+  target.style.top=`${(gameArea.clientHeight-size)/2}px`;
+  gameArea.appendChild(target);
+};
