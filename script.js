@@ -1,0 +1,101 @@
+let hits = 0;
+let misses = 0;
+let timeLeft = 30;
+let targetImgSrc = '';
+let spawnInterval;
+let gameTimer;
+
+const gameArea = document.getElementById('gameArea');
+const hitsDisplay = document.getElementById('hits');
+const missesDisplay = document.getElementById('misses');
+const timeDisplay = document.getElementById('time');
+const targetSizeInput = document.getElementById('targetSize');
+const spawnRateInput = document.getElementById('spawnRate');
+const uploadInput = document.getElementById('targetUpload');
+
+uploadInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      targetImgSrc = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+function startGame() {
+  hits = 0;
+  misses = 0;
+  timeLeft = 30;
+  hitsDisplay.textContent = hits;
+  missesDisplay.textContent = misses;
+  timeDisplay.textContent = timeLeft;
+
+  clearInterval(spawnInterval);
+  clearInterval(gameTimer);
+  gameArea.innerHTML = '';
+
+  spawnInterval = setInterval(spawnTarget, spawnRateInput.value);
+  gameTimer = setInterval(updateTimer, 1000);
+}
+
+function spawnTarget() {
+  const target = document.createElement('img');
+  target.src = targetImgSrc || 'https://i.ibb.co/F61PmY3/target.png';
+  target.classList.add('target');
+
+  const size = targetSizeInput.value;
+  target.style.width = `${size}px`;
+  target.style.height = `${size}px`;
+
+  const x = Math.random() * (gameArea.clientWidth - size);
+  const y = Math.random() * (gameArea.clientHeight - size);
+  target.style.left = `${x}px`;
+  target.style.top = `${y}px`;
+
+  target.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hits++;
+    hitsDisplay.textContent = hits;
+    playHitSound();
+    target.remove();
+  });
+
+  gameArea.appendChild(target);
+  setTimeout(() => target.remove(), 1500);
+}
+
+gameArea.addEventListener('click', () => {
+  misses++;
+  missesDisplay.textContent = misses;
+});
+
+function updateTimer() {
+  timeLeft--;
+  timeDisplay.textContent = timeLeft;
+  if (timeLeft <= 0) endGame();
+}
+
+function endGame() {
+  clearInterval(spawnInterval);
+  clearInterval(gameTimer);
+  alert(`Game Over! 🎯 Hits: ${hits} | Misses: ${misses}`);
+}
+
+function playHitSound() {
+  const audio = new Audio('https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg');
+  audio.volume = 0.3;
+  audio.play();
+}
+
+document.getElementById('startBtn').addEventListener('click', startGame);
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const csv = `Hits,Misses\n${hits},${misses}`;
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'score.csv';
+  a.click();
+});
