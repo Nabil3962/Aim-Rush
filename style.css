@@ -11,8 +11,8 @@ body {
 
 h1 {
   margin-top: 10px;
-  text-shadow: 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 30px #FFD700;
-  color: #39FF14;
+  text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF, 0 0 30px #FF69B4;
+  color: #00FFFF;
   font-size: 2em;
 }
 
@@ -22,15 +22,33 @@ h1 {
   padding: 15px;
   border-radius: 12px;
   width: fit-content;
-  box-shadow: 0 0 15px #39FF14;
+  box-shadow: 0 0 15px #00FFFF;
 }
 
 #controls input[type="range"] {
-  accent-color: #39FF14;
+  accent-color: #00FFFF;
+}
+
+#uploadLabel {
+  background: linear-gradient(90deg, #00FFFF, #FF69B4);
+  padding: 8px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: black;
+  font-weight: bold;
+  margin-right: 10px;
+  box-shadow: 0 0 10px #00FFFF, 0 0 15px #FF69B4;
+  display: inline-block;
+  transition: 0.2s ease-in-out;
+}
+
+#uploadLabel:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px #00FFFF, 0 0 20px #FF69B4;
 }
 
 button {
-  background: linear-gradient(90deg, #39FF14, #FFD700);
+  background: linear-gradient(90deg, #00FFFF, #FF69B4);
   color: black;
   border: none;
   padding: 10px 18px;
@@ -38,45 +56,69 @@ button {
   font-weight: bold;
   border-radius: 10px;
   cursor: pointer;
-  box-shadow: 0 0 10px #39FF14, 0 0 20px #FFD700;
+  box-shadow: 0 0 10px #00FFFF, 0 0 20px #FF69B4;
   transition: all 0.2s ease-in-out;
 }
 
 button:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 15px #39FF14, 0 0 25px #FFD700;
+  box-shadow: 0 0 15px #00FFFF, 0 0 25px #FF69B4;
 }
 
 #gameArea {
   position: relative;
   width: 100vw;
   height: 70vh;
-  border: 2px solid #39FF14;
+  border: 2px solid #00FFFF;
   margin-top: 10px;
   overflow: hidden;
   cursor: crosshair;
   background: linear-gradient(#0B0B1F, #1B0F3D);
-  box-shadow: 0 0 20px #39FF14 inset;
+  box-shadow: 0 0 20px #00FFFF inset;
 }
 
 .target {
   position: absolute;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
-  filter: drop-shadow(0 0 6px #39FF14) drop-shadow(0 0 10px #FFD700);
+  filter: drop-shadow(0 0 6px #00FFFF) drop-shadow(0 0 10px #FF69B4);
 }
 
 .target:hover {
   transform: scale(1.25);
-  filter: drop-shadow(0 0 15px #FFD700) drop-shadow(0 0 20px #39FF14);
+  filter: drop-shadow(0 0 15px #FF69B4) drop-shadow(0 0 20px #00FFFF);
 }
 
 #stats {
   margin-top: 15px;
   font-size: 18px;
-  text-shadow: 0 0 6px #39FF14;
+  text-shadow: 0 0 6px #00FFFF;
 }
 
-/* Animated background stars */
+#scoreCard {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+}
+
+#hitSection, #missSection {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #00FFFF;
+}
+
+#hitIcons img, #missIcons img {
+  width: 30px;
+  margin: 2px;
+  animation: pop 0.3s ease-in-out;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.5); }
+  100% { transform: scale(1); }
+}
+
 #gameArea::after {
   content: '';
   position: absolute;
@@ -99,7 +141,6 @@ button:hover {
   100% { transform: translateY(700px); }
 }
 
-/* Sandal Sprite */
 #sandalSprite {
   position: fixed;
   bottom: 10px;
@@ -108,7 +149,7 @@ button:hover {
   width: 120px;
   pointer-events: none;
   animation: sway 1.5s ease-in-out infinite alternate;
-  filter: drop-shadow(0 0 8px #FFD700);
+  filter: drop-shadow(0 0 8px #FF69B4);
 }
 
 @keyframes sway {
@@ -117,7 +158,6 @@ button:hover {
   100% { transform: translateX(-50%) rotate(-5deg); }
 }
 
-/* Hit flash */
 #gunFlash {
   position: fixed;
   bottom: 100px;
@@ -125,7 +165,7 @@ button:hover {
   transform: translateX(-50%);
   width: 80px;
   height: 40px;
-  background: radial-gradient(circle, #FFD700 0%, transparent 70%);
+  background: radial-gradient(circle, #FF69B4 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   opacity: 0;
